@@ -1,3 +1,6 @@
+#pip install flask
+
+# import flask as fl
 from flask import Flask, request, jsonify, make_response
 
 app = Flask(__name__)
@@ -42,7 +45,7 @@ def home():
     return jsonify({"message":"Welcome to Flask API"})
 
 
-@app.route('/business', methods={'GET'})
+@app.route('/business', methods=['GET'])
 def get_business():
     return make_response(jsonify({"businesses":businesses}))
 
@@ -52,7 +55,6 @@ def add_business():
     data = request.form
     id = businesses[-1]["id"] + 1
     new_business = {
-        "id":id,
         "name": data.get("name"),
         "town": data.get("town"),
         "rating": data.get("rating", 0),
@@ -63,17 +65,16 @@ def add_business():
     businesses.append(new_business)
     return make_response(jsonify(new_business), 200)
 
-def Update_business(id):
-
+@app.route('/business/<int:id>', methods=['PUT'])
+def update_business(id):
     data = request.form
     for business in businesses:
-       if business['id'] == id:
-           business["name"] = data.get("name"),
-           business["town"] = data.get("town"),
-           business["rating"]= data.get("rating")
-           break
-       return make_response(jsonify(business), 200)
-if __name__ == '__main__':
+        if business["id"] == id:
+            business["name"] = data.get("name")
+            business["town"] = data.get("town")
+            business["rating"] = data.get("rating")
+            break
+    return make_response(jsonify(business), 200)
+
+if __name__== '__main__':
     app.run(debug=True)
-
-
